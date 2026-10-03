@@ -17,12 +17,26 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Định nghĩa bảng lưu ý kiến
+# 1. Bảng lưu Ý kiến học sinh
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
 
-# Tự động tạo cơ sở dữ liệu khi ứng dụng khởi chạy
+# 2. Bảng lưu Tài khoản Admin
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+
+# 3. Khởi tạo dữ liệu & Tài khoản Admin mặc định
 with app.app_context():
+    db.create_all()
+    # Kiểm tra xem tài khoản admin đã tồn tại chưa
+    admin_user = User.query.filter_by(username='admin').first()
+    if not admin_user:
+        new_admin = User(username='admin', password='110608wen@')
+        db.session.add(new_admin)
+        db.session.commit()
     db.create_all()
 
 @app.route('/', methods=['GET', 'POST'])
