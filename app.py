@@ -34,7 +34,7 @@ with app.app_context():
     # Kiểm tra xem tài khoản admin đã tồn tại chưa
     admin_user = User.query.filter_by(username='admin').first()
     if not admin_user:
-        new_admin = User(username='admin', password='110608wen@')
+        new_admin = User(username='admin', password='110608')
         db.session.add(new_admin)
         db.session.commit()
     db.create_all()
