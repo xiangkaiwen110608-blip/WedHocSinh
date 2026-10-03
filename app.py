@@ -1,44 +1,53 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-123'
+app.config['SECRET_KEY'] = 'mat-khau-bao-mat-123'
 
-# Cấu hình đường dẫn Database SQLite
+# 1. Cấu hình cơ sở dữ liệu SQLite
 basedir = os.path.abspath(os.path.dirname(__file__))
-db_path = os.path.join(basedir, 'instance', 'feedback.db')
-os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)
+instance_path = os.path.join(basedir, 'instance')
+os.makedirs(instance_path, exist_ok=True)
 
+db_path = os.path.join(instance_path, 'feedback.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Định nghĩa bảng lưu ý kiến
-# 1. Bảng lưu Ý kiến học sinh
+# 2. Cấu hình Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+# 3. Định nghĩa các bảng Database
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
 
-# 2. Bảng lưu Tài khoản Admin
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
 
-# 3. Khởi tạo dữ liệu & Tài khoản Admin mặc định
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+# 4. Tự động tạo cơ sở dữ liệu & Tài khoản Admin mặc định
 with app.app_context():
     db.create_all()
-    # Kiểm tra xem tài khoản admin đã tồn tại chưa
     admin_user = User.query.filter_by(username='admin').first()
     if not admin_user:
-        new_admin = User(username='admin', password='110608')
+        new_admin = User(username='admin', password='123456')
         db.session.add(new_admin)
         db.session.commit()
-    db.create_all()
 
+# --- CÁC ĐƯỜNG DẪN (ROUTES) ---
+
+# Trang chủ gửi ý kiến
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -49,6 +58,36 @@ def index():
             db.session.commit()
             return render_template('index.html', success=True)
     return render_template('index.html')
+
+# Trang đăng nhập Quản trị viên
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        user = User.query.filter_by(username=username).first()
+        if user and user.password == password:
+            login_user(user)
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Tài khoản hoặc mật khẩu không đúng!')
+            
+    return render_template('login.html')
+
+# Trang quản trị xem ý kiến
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    feedbacks = Feedback.query.all()
+    return render_template('dashboard.html', feedbacks=feedbacks)
+
+# Đăng xuất
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
