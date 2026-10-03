@@ -16,37 +16,41 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# 2. Bảng lưu ý kiến học sinh
+# 2. Bảng lưu thông tin ý kiến (Bao gồm Tên và Lớp)
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=False)
+    name = db.Column(db.String(100), nullable=True)          # Tên học sinh
+    student_class = db.Column(db.String(50), nullable=True) # Lớp
+    content = db.Column(db.Text, nullable=False)            # Nội dung
 
-# Tự động tạo bảng database
 with app.app_context():
     db.create_all()
 
 # --- CÁC ROUTE ---
 
-# Trang chủ cho học sinh gửi ý kiến
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        name = request.form.get('name')
+        student_class = request.form.get('student_class')
         content = request.form.get('content')
-        if content:
-            new_feedback = Feedback(content=content)
+        
+        if content and content.strip():
+            new_feedback = Feedback(
+                name=name.strip() if name else "Ẩn danh",
+                student_class=student_class.strip() if student_class else "Không rõ",
+                content=content.strip()
+            )
             db.session.add(new_feedback)
             db.session.commit()
             return render_template('index.html', success=True)
+            
     return render_template('index.html')
 
-# Trang đăng nhập Admin
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # Lấy mật khẩu từ ô nhập duy nhất trong form
         password = request.form.get('password')
-        
-        # Sửa mật khẩu ở dòng này nếu muốn đổi mật khẩu khác
         if password == '123456':
             session['logged_in'] = True
             return redirect(url_for('dashboard'))
@@ -55,16 +59,14 @@ def login():
             
     return render_template('login.html')
 
-# Trang xem danh sách ý kiến (Bảo vệ bằng Session)
 @app.route('/dashboard')
 def dashboard():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
         
-    feedbacks = Feedback.query.all()
+    feedbacks = Feedback.query.order_by(Feedback.id.desc()).all()
     return render_template('dashboard.html', feedbacks=feedbacks)
 
-# Đăng xuất
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
