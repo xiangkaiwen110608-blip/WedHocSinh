@@ -1,46 +1,107 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard Quản Lý Ý Kiến</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Ý Kiến Học Sinh</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+
+        .feedback-card {
+            background: #f9f9f9;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .feedback-id {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .feedback-content {
+            font-size: 16px;
+            color: #333;
+            white-space: pre-wrap;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+            font-style: italic;
+        }
+    </style>
 </head>
-<body class="bg-light">
-  <nav class="navbar navbar-dark bg-dark px-4">
-    <span class="navbar-brand mb-0 h1">Trang Quản Lý Ý Kiến Học Sinh</span>
-    <div>
-      <a href="/" class="btn btn-outline-light btn-sm me-2" target="_blank">Xem trang Web</a>
-      <a href="/logout" class="btn btn-danger btn-sm">Đăng xuất</a>
-    </div>
-  </nav>
+<body>
 
-  <div class="container py-4">
-    <h4 class="mb-4">Danh Sách Đóng Góp Ý Kiến ({{ ykien_list|length }})</h4>
-    
-    {% if not ykien_list %}
-      <div class="alert alert-info">Chưa có ý kiến nào được gửi.</div>
-    {% endif %}
-
-    <div class="row">
-      {% for ykien in ykien_list %}
-        <div class="col-md-6 mb-3">
-          <div class="card shadow-sm border-0">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="badge bg-primary">{{ ykien.chu_de }}</span>
-                <small class="text-muted">{{ ykien.ngay_gui.strftime('%H:%M - %d/%m/%Y') }}</small>
-              </div>
-              <p class="card-text text-dark fs-5 mb-2">{{ ykien.noi_dung }}</p>
-              <hr>
-              <div class="d-flex justify-content-between align-items-center">
-                <small class="text-secondary">Người gửi: <strong>{{ ykien.ho_ten }}</strong> (Lớp {{ ykien.lop }})</small>
-                <a href="/delete/{{ ykien.id }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
-              </div>
-            </div>
-          </div>
+    <div class="container">
+        <div class="header">
+            <h2>Danh Sách Ý Kiến Đóng Góp</h2>
+            <a href="/logout" class="logout-btn">Đăng xuất</a>
         </div>
-      {% endfor %}
+
+        <!-- Vòng lặp hiển thị từng ý kiến -->
+        {% if feedbacks %}
+            {% for item in feedbacks %}
+                <div class="feedback-card">
+                    <div class="feedback-id">Ý kiến #{{ item.id }}</div>
+                    <div class="feedback-content">{{ item.content }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-msg">Chưa có ý kiến nào được gửi.</div>
+        {% endif %}
     </div>
-  </div>
+
 </body>
 </html>
