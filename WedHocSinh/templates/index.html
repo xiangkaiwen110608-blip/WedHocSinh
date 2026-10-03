@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Hộp Ý Kiến Học Sinh</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <div class="card shadow border-0 mx-auto" style="max-width: 600px;">
+      <div class="card-header bg-primary text-white text-center py-3">
+        <h4 class="m-0 font-weight-bold">HỘP Ý KIẾN HỌC SINH</h4>
+      </div>
+      <div class="card-body p-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="/" method="POST">
+          <div class="mb-3">
+            <label class="form-label font-weight-bold">Họ và tên (Có thể để "Ẩn danh"):</label>
+            <input type="text" name="ho_ten" class="form-control" placeholder="Nguyễn Văn A">
+          </div>
+          <div class="mb-3">
+            <label class="form-label font-weight-bold">Lớp:</label>
+            <input type="text" name="lop" class="form-control" placeholder="Ví dụ: 10A1" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label font-weight-bold">Chủ đề góp ý:</label>
+            <select name="chu_de" class="form-select">
+              <option value="Học tập">Học tập & Bài giảng</option>
+              <option value="Cơ sở vật chất">Cơ sở vật chất</option>
+              <option value="Ngoại khóa">Hoạt động ngoại khóa</option>
+              <option value="Khác">Ý kiến khác</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label font-weight-bold">Nội dung đóng góp:</label>
+            <textarea name="noi_dung" rows="5" class="form-control" required placeholder="Nhập chi tiết ý kiến..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Gửi Ý Kiến</button>
+        </form>
+      </div>
+    </div>
+    <div class="text-center mt-3">
+      <a href="/login" class="text-secondary text-decoration-none small">Trang Quản Trị (Admin)</a>
+    </div>
+  </div>
+</body>
+</html>
