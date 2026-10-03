@@ -63,12 +63,11 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
+        # Lấy mật khẩu từ ô duy nhất trong form
         password = request.form.get('password')
         
-        user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
-            login_user(user)
+        if password == '123456':
+            # Đúng mật khẩu -> chuyển sang trang dashboard
             return redirect(url_for('dashboard'))
         else:
             flash('Tài khoản hoặc mật khẩu không đúng!')
