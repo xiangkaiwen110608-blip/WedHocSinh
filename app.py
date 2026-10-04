@@ -1,76 +1,81 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, flash, redirect, render_template, request, url_for
+import requests
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'mat-khau-bao-mat-123'
+app.secret_key = os.environ.get('SECRET_KEY', 'default_secret_key_12345')
 
-# 1. Cấu hình cơ sở dữ liệu SQLite
-basedir = os.path.abspath(os.path.dirname(__file__))
-instance_path = os.path.join(basedir, 'instance')
-os.makedirs(instance_path, exist_ok=True)
+# =========================================================
+# THÔNG TIN CẤU HÌNH FACEBOOK MESSENGER API
+# =========================================================
+# Dán mã Page Access Token lấy từ Graph API Explorer vào đây:
+FB_PAGE_ACCESS_TOKEN = 'EAAgtKvdEvLABSt8BNbqxZA1RECqa2CAC1oikV8cHvjwgcYfP2xpTTSvMvjFxsGYXwk0w0qzino23mL2BzdhfUz4eH45ywe0enezLJxZA5477EGJwK3LY934gxfWvY4utTEv1hJgXDtjqnL8AmBuKUIiD5mcszKk2nvLtttZAFatZA4rqVyZBoY2UvpZBhiB9yQ2oFhxpfg0N6sbLw98uZCePYxH2Dd8xQMZCdbuWsjXrkZAehOu0RZBXZAk0Y1bdYCRwZBX1ZAmxke15GedYIT17PK9uK'
 
-db_path = os.path.join(instance_path, 'feedback.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Dán dãy số Facebook ID cá nhân của bạn vào đây (Lấy từ lookup-id.com):
+FB_RECIPIENT_ID = '61576796062680'
 
-db = SQLAlchemy(app)
 
-# 2. Bảng lưu thông tin ý kiến (Bao gồm Tên và Lớp)
-class Feedback(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=True)          # Tên học sinh
-    student_class = db.Column(db.String(50), nullable=True) # Lớp
-    content = db.Column(db.Text, nullable=False)            # Nội dung
+def send_facebook_message(message_text):
+  """Hàm gửi tin nhắn tự động đến Facebook Messenger cá nhân qua Graph API."""
+  url = f'https://graph.facebook.com/v19.0/me/messages?access_token={FB_PAGE_ACCESS_TOKEN}'
+  payload = {
+      'recipient': {'id': FB_RECIPIENT_ID},
+      'message': {'text': message_text},
+  }
+  headers = {'Content-Type': 'application/json'}
 
-with app.app_context():
-    db.create_all()
+  try:
+    response = requests.post(url, json=payload, headers=headers)
+    res_data = response.json()
+    if response.status_code == 200:
+      print('✅ Đã gửi thông báo đến Messenger thành công!')
+    else:
+      print('❌ Lỗi khi gửi tin nhắn Facebook:', res_data)
+    return res_data
+  except Exception as e:
+    print('❌ Ngoại lệ xảy ra khi gửi tin nhắn:', e)
+    return None
 
-# --- CÁC ROUTE ---
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        student_class = request.form.get('student_class')
-        content = request.form.get('content')
-        
-        if content and content.strip():
-            new_feedback = Feedback(
-                name=name.strip() if name else "Ẩn danh",
-                student_class=student_class.strip() if student_class else "Không rõ",
-                content=content.strip()
-            )
-            db.session.add(new_feedback)
-            db.session.commit()
-            return render_template('index.html', success=True)
-            
-    return render_template('index.html')
+# =========================================================
+# CÁC ROUTE CỦA ỨNG DỤNG FLASK
+# =========================================================
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        password = request.form.get('password')
-        if password == '123456':
-            session['logged_in'] = True
-            return redirect(url_for('dashboard'))
-        else:
-            flash('Mật khẩu không đúng!')
-            
-    return render_template('login.html')
 
-@app.route('/dashboard')
-def dashboard():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-        
-    feedbacks = Feedback.query.order_by(Feedback.id.desc()).all()
-    return render_template('dashboard.html', feedbacks=feedbacks)
+@app.route('/')
+def home():
+  """Trang chủ hiển thị form góp ý dành cho học sinh."""
+  return render_template('index.html')
 
-@app.route('/logout')
-def logout():
-    session.pop('logged_in', None)
-    return redirect(url_for('login'))
+
+@app.route('/submit-feedback', methods=['POST'])
+def submit_feedback():
+  """Xử lý dữ liệu form góp ý và gửi thông báo qua Messenger."""
+  student_name = request.form.get('name', 'Ẩn danh').strip()
+  student_class = request.form.get('student_class', 'Không rõ').strip()
+  feedback_content = request.form.get('feedback', '').strip()
+
+  if not feedback_content:
+    flash('Vui lòng nhập nội dung góp ý!', 'danger')
+    return redirect(url_for('home'))
+
+  # Tạo nội dung tin nhắn gửi về Facebook Messenger
+  notification_msg = (
+      f"📩 CÓ GÓP Ý MỚI TỪ HỌC SINH!\n"
+      f"-------------------------------\n"
+      f"👤 Họ và tên: {student_name}\n"
+      f"🏫 Lớp: {student_class}\n"
+      f"💬 Nội dung: {feedback_content}\n"
+      f"-------------------------------"
+  )
+
+  # Gửi tin nhắn đến Messenger của bạn
+  send_facebook_message(notification_msg)
+
+  flash('Cảm ơn bạn đã gửi góp ý! Ý kiến của bạn đã được ghi nhận.', 'success')
+  return redirect(url_for('home'))
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+  # Chạy ứng dụng Flask ở chế độ Debug khi kiểm tra ở máy cục bộ
+  app.run(host='0.0.0.0', port=5000, debug=True)
