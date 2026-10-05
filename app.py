@@ -49,7 +49,7 @@ def login():
         password = request.form.get('password')
         
         # Mật khẩu đăng nhập mặc định là 123456
-        if password == '123456':
+        if password == '110608':
             session['logged_in'] = True
             return redirect(url_for('dashboard'))
         else:
