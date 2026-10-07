@@ -9,7 +9,6 @@ app.secret_key = os.environ.get('SECRET_KEY', 'bi_mat_khong_the_bat_mi_12345')
 # =========================================================
 # CẤU HÌNH DISCORD WEBHOOK
 # https://discord.com/api/webhooks/1557372196828221510/pRZ3RH_agMZYf4zLoTss8Dzo4ekEkZ5c7WM6A_yfj0Rhxu-OrC6lktqwxCz2V90Q2e8q
-# =========================================================
 DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1557372196828221510/pRZ3RH_agMZYf4zLoTss8Dzo4ekEkZ5c7WM6A_yfj0Rhxu-OrC6lktqwxCz2V90Q2e8q'
 
 
