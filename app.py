@@ -83,7 +83,44 @@ def submit_feedback():
     return redirect(url_for('home'))
 
   # Gửi tin nhắn sang Discord
-  send_discord_notification(student_name, student_class, feedback_content)
+  def send_discord_notification(student_name, student_class, feedback_content):
+    """Hàm gửi thông báo góp ý trực tiếp về kênh Discord qua Webhook."""
+    if not DISCORD_WEBHOOK_URL:
+        print('⚠️ Chưa cấu hình link DISCORD_WEBHOOK_URL!')
+        return False
+
+    # Tạo khung nội dung tin nhắn gửi sang Discord
+    payload = {
+        'embeds': [{
+            'title': '📩 GÓP Ý MỚI TỪ HỌC SINH',
+            'color': 3447003,  # Màu xanh lam
+            'fields': [
+                {'name': '👤 Họ và tên', 'value': student_name, 'inline': True},
+                {'name': '🏫 Lớp', 'value': student_class, 'inline': True},
+                {
+                    'name': '📝 Nội dung góp ý',
+                    'value': feedback_content,
+                    'inline': False,
+                },
+            ],
+            'footer': {'text': 'Hệ thống phản hồi WedHocSinh'},
+        }]
+    }
+
+    try:
+        response = requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=5)
+        if response.status_code in [200, 204]:
+            print('✅ Đã gửi thông báo về Discord thành công!')
+            return True
+        else:
+            print(
+                f'❌ Lỗi gửi Discord. Status: {response.status_code}, Response:'
+                f' {response.text}'
+            )
+            return False
+    except Exception as e:
+        print(f'❌ Ngoại lệ khi gửi Discord: {e}')
+        return False
 
   # Thông báo thành công và chuyển hướng về trang chủ
   flash('Cảm ơn bạn đã gửi góp ý! Ý kiến của bạn đã được ghi nhận.', 'success')
