@@ -97,3 +97,10 @@ def submit_feedback():
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=5000, debug=True)
+  
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+  if request.method == 'POST':
+    # Xử lý đăng nhập ở đây
+    return redirect(url_for('home'))
+  return render_template('login.html')  # Hoặc giao diện đăng nhập của bạn
