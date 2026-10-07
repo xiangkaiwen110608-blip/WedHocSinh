@@ -8,7 +8,7 @@ app.secret_key = os.environ.get('SECRET_KEY', 'mat_khau_bao_mat_app_123')
 # =========================================================
 # CẤU HÌNH DISCORD WEBHOOK
 # =========================================================
-DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1557372196828221510/pRZ3RH_agMZYf4zLoTss8Dzo4ekEkZ5c7WM6A_yfj0Rhxu-OrC6lktqwxCz2V90Q2e8q'
+DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1557380096342495325/jjBk2sjl9JdA85d6bECoFFGrfanCz8bFI6-RA39k5-QJlEvlpnK7lkr59r6-6SriP3tt'
 
 
 def send_discord_notification(student_name, student_class, feedback_content):
