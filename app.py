@@ -11,7 +11,7 @@ FEEDBACK_LIST = []
 # =========================================================
 # CẤU HÌNH DISCORD WEBHOOK (DÁN LINK MỚI VÀO DÒNG DƯỚI)
 # =========================================================
-DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1557384510004400258/LRUNjufESE4l9BQPYZC2xMGS5XzNwBW_bV0Jdlz-AMu7ibDnz6S5vlbhUI6_8K1IO6HA'
+DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1557385601857093694/dKqSgnzBku6OEJjVfAb0wERVZ9DCRTfiDhumnJdrTvnPvrH4uO6FgJCxfnbhNsrXj-wG'
 
 
 def send_discord_notification(student_name, student_class, feedback_content):
