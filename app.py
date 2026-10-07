@@ -14,13 +14,9 @@ DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1557372196828221510/pRZ3
 
 def send_discord_notification(student_name, student_class, feedback_content):
   """Hàm gửi thông báo góp ý trực tiếp về kênh Discord qua Webhook."""
-  if (
-      not DISCORD_WEBHOOK_URL
-      or DISCORD_WEBHOOK_URL == 'https://discord.com/api/webhooks/1557372196828221510/pRZ3RH_agMZYf4zLoTss8Dzo4ekEkZ5c7WM6A_yfj0Rhxu-OrC6lktqwxCz2V90Q2e8q'
-  ):
-    print('⚠️ Chưa cấu hình link DISCORD_WEBHOOK_URL!')
-    return False
-
+ if not DISCORD_WEBHOOK_URL:
+        print('⚠️ Chưa cấu hình link DISCORD_WEBHOOK_URL!')
+        return False
   # Tạo khung nội dung tin nhắn gửi sang Discord
   payload = {
       'embeds': [{
