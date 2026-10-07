@@ -91,5 +91,19 @@ def submit_feedback():
     return redirect(url_for('home'))
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        password = request.form.get('password', '')
+        # Bạn có thể đổi 'admin123' thành mật khẩu bạn muốn
+        if password == 'admin123':
+            flash('Đăng nhập thành công!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Mật khẩu không đúng!', 'danger')
+
+    return render_template('login.html')
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
