@@ -3,140 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đóng Góp Ý Kiến Học Sinh</title>
+    <title>Hòm Thư Góp Ý Học Sinh</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 550px;
-        }
-
-        h2 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        p.subtitle {
-            color: #666;
-            text-align: center;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #444;
-        }
-
-        textarea {
-            width: 100%;
-            height: 140px;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            resize: vertical;
-            font-size: 15px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        textarea:focus {
-            border-color: #007bff;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .admin-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #6c757d;
-            text-decoration: none;
-            font-size: 13px;
-        }
-
-        .admin-link:hover {
-            text-decoration: underline;
-        }
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: 40px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input[type="text"], textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        textarea { height: 120px; resize: vertical; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .alert-success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+        .alert-danger { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+        .admin-link { display: block; text-align: center; margin-top: 15px; color: #6c757d; text-decoration: none; font-size: 14px; }
+        .admin-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h2>Hòm Thư Đóng Góp Ý Kiến</h2>
-        <p class="subtitle">Hãy chia sẻ suy nghĩ và đóng góp của bạn để xây dựng môi trường học tập tốt hơn!</p>
+        <h2>📩 Hòm Thư Góp Ý</h2>
 
-        <!-- Thông báo gửi thành công -->
-        {% if success %}
-            <div class="alert-success">
-                Cảm ơn bạn! Ý kiến của bạn đã được gửi thành công.
-            </div>
-        {% endif %}
+        <!-- Thông báo từ Flask -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
-        <!-- Form gửi ý kiến -->
         <form action="/submit-feedback" method="POST">
             <div class="form-group">
-                <label for="content">Nội dung đóng góp:</label>
-                <textarea id="content" name="content" placeholder="Nhập ý kiến hoặc phản hồi của bạn tại đây..." required></textarea>
+                <label for="name">Họ và tên:</label>
+                <input type="text" id="name" name="name" placeholder="Ví dụ: Nguyễn Văn A (Có thể để trống)">
             </div>
-
-            <button type="submit">Gửi Ý Kiến</button>
+            <div class="form-group">
+                <label for="student_class">Lớp:</label>
+                <input type="text" id="student_class" name="student_class" placeholder="Ví dụ: 10A1">
+            </div>
+            <div class="form-group">
+                <label for="feedback">Nội dung góp ý (*):</label>
+                <textarea id="feedback" name="feedback" placeholder="Nhập ý kiến đóng góp của bạn..." required></textarea>
+            </div>
+            <button type="submit">Gửi góp ý</button>
         </form>
 
         <a href="/login" class="admin-link">Đăng nhập Quản trị viên</a>
     </div>
-
 </body>
 </html>
