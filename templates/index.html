@@ -10,9 +10,32 @@
         h2 { text-align: center; color: #333; margin-top: 0; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
-        input[type="text"], textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        
+        /* ĐÃ SỬA: Thêm font-family: inherit và letter-spacing: normal để chữ mượt, không bị thưa */
+        input[type="text"], textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            box-sizing: border-box; 
+            font-family: inherit; /* Ép nhận font Arial mượt từ body */
+            font-size: 14px;
+            letter-spacing: normal; /* Xóa khoảng cách thưa rải rác */
+        }
+        
         textarea { height: 120px; resize: vertical; }
-        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-family: inherit;
+        }
         button:hover { background: #0056b3; }
         .alert-success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
         .alert-danger { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
@@ -44,7 +67,7 @@
             </div>
             <div class="form-group">
                 <label for="feedback">Nội dung góp ý (*):</label>
-                <textarea id="feedback" name="feedback" placeholder="=>..." required></textarea>
+                <textarea id="feedback" name="feedback" placeholder="Nhập ý kiến đóng góp của bạn..." required></textarea>
             </div>
             <button type="submit">Gửi góp ý</button>
         </form>
