@@ -84,7 +84,7 @@ def submit_feedback():
 def login():
     if request.method == 'POST':
         password = request.form.get('password', '')
-        if password == 'admin123':
+        if password == '11060811@':
             return redirect(url_for('dashboard'))
         else:
             flash('Mật khẩu không đúng!', 'danger')
