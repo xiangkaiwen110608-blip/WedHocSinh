@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gửi Góp Ý Thành Công</title>
-    <!-- Thêm icon logo -->
+    <!-- Thêm icon logo trên tab -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
     <style>
         body { 
@@ -69,6 +69,11 @@
 </head>
 <body>
     <div class="card">
+        <!-- Logo bo góc ở trang thành công -->
+        <div style="text-align: center; margin-bottom: 15px;">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 70px; height: 70px; border-radius: 15px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        </div>
+
         <div class="icon-success">✓</div>
         <h2>Đã Gửi Thành Công!</h2>
         <p>Cảm ơn bạn đã đóng góp ý kiến! Ý kiến của bạn là giúp cho chúng ta cải thiện môi trường học tốt hơn!</p>
