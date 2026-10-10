@@ -3,105 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Sách Ý Kiến Học Sinh</title>
+    <title>Bảng Quản Trị Góp Ý</title>
+    <!-- Thêm icon logo -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f4f7f6;
-            padding: 30px 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eee;
-        }
-
-        h2 {
-            color: #333;
-        }
-
-        .logout-btn {
-            background-color: #dc3545;
-            color: white;
-            padding: 8px 16px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .logout-btn:hover {
-            background-color: #c82333;
-        }
-
-        .feedback-card {
-            background: #f9f9f9;
-            border-left: 4px solid #007bff;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-
-        .feedback-id {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .feedback-content {
-            font-size: 16px;
-            color: #333;
-            white-space: pre-wrap;
-        }
-
-        .empty-msg {
-            text-align: center;
-            color: #777;
-            padding: 30px;
-            font-style: italic;
-        }
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; margin-top: 0; }
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logout-btn { background: #dc3545; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; font-size: 14px; font-weight: bold; }
+        .logout-btn:hover { background: #c82333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 14px; }
+        th { background-color: #f8f9fa; color: #333; font-weight: bold; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .empty-msg { text-align: center; color: #666; padding: 20px; font-style: italic; }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <div class="header">
-            <h2>Danh Sách Ý Kiến Đóng Góp</h2>
-            <a href="/logout" class="logout-btn">Đăng xuất</a>
+        <div class="header-actions">
+            <h2>📋 Danh Sách Ý Kiến Góp Ý</h2>
+            <a href="/" class="logout-btn">Về trang chủ</a>
         </div>
 
-        <!-- Vòng lặp hiển thị từng ý kiến -->
-        {% if feedbacks %}
-            {% for item in feedbacks %}
-                <div class="feedback-card">
-                    <div class="feedback-id">Ý kiến #{{ item.id }}</div>
-                    <div class="feedback-content">{{ item.content }}</div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="empty-msg">Chưa có ý kiến nào được gửi.</div>
-        {% endif %}
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Họ và tên</th>
+                    <th style="width: 15%;">Lớp</th>
+                    <th style="width: 65%;">Nội dung góp ý</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if feedbacks %}
+                    {% for fb in feedbacks %}
+                    <tr>
+                        <td>{{ fb.name }}</td>
+                        <td>{{ fb.student_class }}</td>
+                        <td>{{ fb.content }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="empty-msg">Chưa có ý kiến góp ý nào được gửi lên.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
     </div>
-
 </body>
 </html>
