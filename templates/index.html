@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hòm Thư Góp Ý Học Sinh</title>
-    <!-- Thêm icon logo trên tab -->
+    <!-- THÊM DÒNG NÀY ĐỂ CÓ ICON TRÊN TAB -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
     <style>
         body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
@@ -20,7 +20,6 @@
             box-sizing: border-box; 
             font-family: inherit; 
             font-size: 14px;
-            letter-spacing: normal; 
         }
         textarea { height: 120px; resize: vertical; }
         button { 
@@ -33,7 +32,6 @@
             font-size: 16px; 
             font-weight: bold; 
             cursor: pointer; 
-            font-family: inherit;
         }
         button:hover { background: #0056b3; }
         .alert-success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
@@ -44,11 +42,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- Logo bo góc ở trang chủ -->
-        <div style="text-align: center; margin-bottom: 15px;">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 70px; height: 70px; border-radius: 15px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        </div>
-
+        <!-- ĐÃ XÓA ẢNH LOGO TRÊN THÂN TRANG -->
         <h2>📩 Hòm Thư Góp Ý</h2>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
