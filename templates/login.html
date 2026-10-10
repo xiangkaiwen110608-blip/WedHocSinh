@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập Quản Trị</title>
-    <!-- Thêm icon logo trên tab -->
+    <!-- THÊM DÒNG NÀY ĐỂ CÓ ICON TRÊN TAB -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
     <style>
         body { font-family: Arial, sans-serif; background: #1a1a1a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
@@ -20,11 +20,7 @@
 </head>
 <body>
     <div class="card">
-        <!-- Logo bo góc ở trang đăng nhập admin -->
-        <div style="text-align: center; margin-bottom: 15px;">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 70px; height: 70px; border-radius: 15px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        </div>
-
+        <!-- ĐÃ XÓA ẢNH LOGO TRÊN THÂN TRANG -->
         <h2>Đăng Nhập Quản Trị</h2>
 
         {% with messages = get_flashed_messages(category_filter=["danger"]) %}
