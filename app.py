@@ -1,4 +1,5 @@
 import os
+import threading  # 1. Thêm thư viện chạy ngầm
 from flask import Flask, flash, redirect, render_template, request, url_for
 import requests
 
@@ -73,10 +74,13 @@ def submit_feedback():
         'content': feedback_content,
     })
 
-    # 2. Ghi vĩnh viễn vào Google Sheets
-    send_to_google_sheets(student_name, student_class, feedback_content)
+    # 2. Gửi vĩnh viễn vào Google Sheets bằng Thread (chạy ngầm, không làm đứng trang)
+    threading.Thread(
+        target=send_to_google_sheets,
+        args=(student_name, student_class, feedback_content)
+    ).start()
 
-    # 3. Chuyển hướng sang giao diện thông báo gửi thành công
+    # 3. Chuyển hướng sang giao diện thông báo gửi thành công NGAY LẬP TỨC
     return render_template('success.html')
 
 
